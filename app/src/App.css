@@ -1,18 +1,18 @@
 :root {
-  --bg: #0f172a;
+  --bg: #0e1726;
   --card: #fff;
-  --muted: #64748b;
   --ink: #0f172a;
+  --muted: #64748b;
   --brand1: #5b9df9;
   --brand2: #7c3aed;
   --primary: #2563eb;
   --primary-ink: #fff;
   --ring: #93c5fd;
-  --border: #e2e8f0;
+  --border: #e5e7eb;
   --soft: #f8fafc;
   --green-soft: #ecfdf5;
   --yellow: #fde047;
-  --shadow: 0 6px 18px rgba(2, 6, 23, .08);
+  --shadow: 0 8px 22px rgba(2, 6, 23, .10);
 }
 
 * {
@@ -26,9 +26,9 @@ body {
 }
 
 body {
-  background: var(--bg);
+  font-family: Inter, system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
   color: var(--ink);
-  font-family: Inter, system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif
+  background: var(--bg)
 }
 
 .page {
@@ -37,51 +37,56 @@ body {
   flex-direction: column
 }
 
-/* FULL-BLEED HEADER */
+/* Header full-bleed */
 .header {
-  position: relative;
-  isolation: isolate;
-  padding: 32px 0;
   color: #fff;
-}
-
-.header::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  /* full width */
-  z-index: -1;
+  padding: 40px 0;
   background: linear-gradient(135deg, var(--brand1), var(--brand2));
 }
 
-/* CENTER THE CONTENT */
+.header .container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px
+}
+
+.brand {
+  margin: 0;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  font-weight: 800;
+  letter-spacing: .2px
+}
+
+.tagline {
+  margin: 6px 0 0;
+  opacity: .9
+}
+
+/* Centered content column */
 .container {
-  width: min(100%, 1100px);
-  /* never exceed 1100px */
-  margin-inline: auto;
-  /* centers horizontally */
-  padding-inline: 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px
 }
 
 .main {
   padding: 28px 0 40px
 }
 
-/* CARD */
+/* Card */
 .card {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: 16px;
   padding: 20px;
-  margin: 0 auto 22px;
-  /* auto centers the card in the container */
+  margin-bottom: 24px;
   box-shadow: var(--shadow);
 }
 
 .card-title {
-  margin: 0 0 8px;
+  margin: 0 0 10px;
   font-size: 1.25rem;
-  font-weight: 700
+  font-weight: 800
 }
 
 .muted {
@@ -89,7 +94,7 @@ body {
   margin: 0 0 16px
 }
 
-/* GRID + FIELDS */
+/* Grid */
 .grid {
   display: grid
 }
@@ -102,6 +107,7 @@ body {
   gap: 14px
 }
 
+/* Fields */
 .field {
   display: flex;
   flex-direction: column;
@@ -109,7 +115,7 @@ body {
 }
 
 .label {
-  font-weight: 600
+  font-weight: 700
 }
 
 .input {
@@ -117,7 +123,7 @@ body {
   border: 1px solid var(--border);
   background: #fff;
   color: var(--ink);
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 10px 12px;
   font-size: 1rem;
   outline: none;
@@ -130,19 +136,15 @@ body {
 }
 
 .textarea {
-  min-height: 170px;
+  min-height: 180px;
   resize: vertical
 }
 
 .select {
-  appearance: none;
-  background-image: linear-gradient(45deg, transparent 50%, #94a3b8 50%), linear-gradient(135deg, #94a3b8 50%, transparent 50%);
-  background-position: calc(100% - 18px) calc(50% - 4px), calc(100% - 12px) calc(50% - 4px);
-  background-size: 6px 6px, 6px 6px;
-  background-repeat: no-repeat
+  appearance: none
 }
 
-/* BUTTONS */
+/* Buttons */
 .actions {
   display: flex;
   gap: 12px;
@@ -151,12 +153,12 @@ body {
 }
 
 .btn {
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 10px 16px;
-  font-weight: 700;
+  font-weight: 800;
   cursor: pointer;
   border: 1px solid transparent;
-  transition: transform .05s ease, background .2s ease, color .2s ease, border-color .2s ease
+  transition: transform .05s ease, background .2s ease, color .2s ease, border-color .2s ease;
 }
 
 .btn:active {
@@ -188,20 +190,20 @@ body {
   color: #fff
 }
 
-/* RESULTS */
+/* Results */
 .panel-title {
   margin: 0 0 8px;
-  font-weight: 700
+  font-weight: 800
 }
 
 .codeblock {
   background: var(--soft);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 12px;
   min-height: 160px;
   white-space: pre-wrap;
-  word-break: break-word
+  word-break: break-word;
 }
 
 .codeblock.green {
@@ -219,24 +221,24 @@ body {
   background: #eef2ff;
   color: #3730a3;
   border: 1px solid #c7d2fe;
-  padding: 4px 8px;
+  padding: 4px 10px;
   border-radius: 999px;
   font-size: .85rem;
-  font-weight: 700
+  font-weight: 800
 }
 
-/* HIGHLIGHT */
+/* Highlight */
 mark {
   background: var(--yellow);
-  padding: 0 3px;
+  padding: 0 4px;
   border-radius: 4px;
-  font-weight: 700
+  font-weight: 800
 }
 
-/* ALERT */
+/* Alerts */
 .alert {
   padding: 10px 12px;
-  border-radius: 10px;
+  border-radius: 12px;
   border: 1px solid
 }
 
@@ -246,8 +248,15 @@ mark {
   color: #7f1d1d
 }
 
-/* RESPONSIVE */
-@media (max-width: 800px) {
+/* Footer */
+.footer {
+  color: #cbd5e1;
+  padding: 24px 0 40px;
+  text-align: center
+}
+
+/* Responsive */
+@media (max-width: 960px) {
   .two {
     grid-template-columns: 1fr
   }
