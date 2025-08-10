@@ -10,7 +10,8 @@ body {
 }
 
 body {
-  background: #f5f6f8;
+  background: #f3f4f6;
+  /* Slightly grey background */
   color: #111827;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
 }
@@ -23,17 +24,20 @@ body {
 }
 
 h1 {
-  margin: 0 0 16px;
-  font-size: 1.75rem;
+  margin: 0 0 20px;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1f2937;
 }
 
 /* Form */
 .form {
-  background: #fff;
-  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
   border-radius: 8px;
   padding: 16px;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .label {
@@ -45,9 +49,9 @@ h1 {
 .textarea {
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid #d1d5db;
+  border: 1px solid #9ca3af;
   border-radius: 6px;
-  background: #fff;
+  background: #ffffff;
   font-size: 1rem;
   line-height: 1.5;
   resize: vertical;
@@ -71,7 +75,7 @@ h1 {
 .select {
   width: 100%;
   padding: 8px 10px;
-  border: 1px solid #d1d5db;
+  border: 1px solid #9ca3af;
   border-radius: 6px;
   background: #fff;
   font-size: 1rem;
@@ -118,23 +122,31 @@ h1 {
 
 .content {
   padding: 12px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #d1d5db;
   border-radius: 6px;
-  background: #f8fafc;
+  background: #f9fafb;
   min-height: 160px;
   white-space: pre-wrap;
   word-break: break-word;
 }
 
+.original {
+  background: #fff;
+  /* Keep original text clean */
+}
+
 .anonymized {
-  background: #f0fdf4;
+  background: #ecfdf5;
+  /* Light green background for anonymized text */
 }
 
 /* Highlight */
 mark {
-  background: #fef08a;
+  background: #fde047;
+  /* Stronger yellow for PII highlight */
   padding: 0 2px;
   border-radius: 2px;
+  font-weight: 600;
 }
 
 /* Download button */

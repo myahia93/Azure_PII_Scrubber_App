@@ -1,7 +1,7 @@
-// Azure Functions (SWA-integrated) HTTP endpoint for PII redaction.
-// Receives { text, language, policy } and returns { redactedText, entities }.
+// Azure Functions HTTP endpoint for PII redaction.
+// Receives { text, language, policy } and returns { anonymized, spans, entities }.
 // - policy: "redact" | "pseudo" | "hash"
-// - language: "auto" | "en" | "fr" (when "auto", we omit language to let the service detect)
+// - language: "auto" | "en" | "fr"
 // Uses Azure AI Language (Text Analytics) PII endpoint via REST.
 
 const fetch = require('node-fetch');
@@ -10,7 +10,6 @@ const crypto = require('crypto');
 const endpoint = process.env.LANGUAGE_ENDPOINT;
 const key = process.env.LANGUAGE_KEY;
 
-// Helper: build documents payload, omitting language if "auto"
 function buildDocuments(text, language) {
     const doc = { id: "1", text };
     if (language && language !== "auto") {
@@ -19,59 +18,62 @@ function buildDocuments(text, language) {
     return { documents: [doc] };
 }
 
-// Helper: apply chosen masking policy on original text
-function applyPolicy(originalText, entities, policy) {
-    // Build replacement list from entities
-    const replacements = entities.map(e => {
-        const start = e.offset;
-        const end = e.offset + e.length;
-        const snippet = originalText.slice(start, end);
+// Applies masking policy and returns anonymized text + spans
+function applyPolicyWithSpans(originalText, entities, policy) {
+    let anonymized = "";
+    let cursor = 0;
+    const spans = [];
 
-        // Default replacement: redact
-        let replacement = "***";
-        if (policy === "pseudo") {
-            // Use the PII category as a pseudonym label
-            replacement = `[${e.category}]`;
-        } else if (policy === "hash") {
-            // Irreversible short hash (avoid leaking originals)
-            replacement = crypto.createHash("sha256")
-                .update(snippet)
-                .digest("hex")
-                .slice(0, 10);
-        }
+    entities
+        .sort((a, b) => a.offset - b.offset)
+        .forEach(e => {
+            const start = e.offset;
+            const end = e.offset + e.length;
 
-        return { start, end, replacement };
-    });
+            // Append unchanged text before entity
+            anonymized += originalText.slice(cursor, start);
 
-    // Replace from the end to preserve offsets
-    let redacted = originalText;
-    replacements
-        .sort((a, b) => b.start - a.start)
-        .forEach(r => {
-            redacted = redacted.slice(0, r.start) + r.replacement + redacted.slice(r.end);
+            const snippet = originalText.slice(start, end);
+            let replacement = "***";
+
+            if (policy === "pseudo") {
+                replacement = `[${e.category}]`;
+            } else if (policy === "hash") {
+                replacement = crypto.createHash("sha256")
+                    .update(snippet)
+                    .digest("hex")
+                    .slice(0, 10);
+            }
+
+            // Track where the replacement lands in the anonymized text
+            const spanStart = anonymized.length;
+            anonymized += replacement;
+            const spanEnd = anonymized.length;
+
+            spans.push({ start: spanStart, end: spanEnd });
+            cursor = end;
         });
 
-    return redacted;
+    // Append remaining text
+    anonymized += originalText.slice(cursor);
+    return { anonymized, spans };
 }
 
 module.exports = async function (context, req) {
     try {
-        // Basic input validation
         const { text, language = "auto", policy = "redact" } = req.body || {};
         if (!text || typeof text !== "string" || text.trim().length === 0) {
             context.res = { status: 400, body: { error: "Missing or empty 'text'." } };
             return;
         }
         if (!endpoint || !key) {
-            context.res = { status: 500, body: { error: "Server is missing AI_LANGUAGE_* config." } };
+            context.res = { status: 500, body: { error: "Missing AI Language config." } };
             return;
         }
 
-        // PII endpoint (stable version)
         const url = `${endpoint}/text/analytics/v3.1/entities/recognition/pii`;
         const payload = buildDocuments(text, language);
 
-        // Call Azure AI Language PII REST API
         const resp = await fetch(url, {
             method: "POST",
             headers: {
@@ -82,26 +84,21 @@ module.exports = async function (context, req) {
         });
 
         const data = await resp.json();
-
         if (!resp.ok) {
-            // Forward useful error context for troubleshooting
             context.log("PII API error:", data);
             context.res = { status: 502, body: { error: "Upstream PII API error", details: data } };
             return;
         }
 
-        const entities = (data && data.documents && data.documents[0] && data.documents[0].entities) || [];
-
-        // Apply masking policy
-        const redactedText = applyPolicy(text, entities, policy);
+        const entities = (data?.documents?.[0]?.entities) || [];
+        const { anonymized, spans } = applyPolicyWithSpans(text, entities, policy);
 
         context.res = {
             status: 200,
             headers: { "Content-Type": "application/json" },
-            body: { redactedText, entities }
+            body: { anonymized, spans, entities }
         };
     } catch (err) {
-        // Catch-all safety net
         context.log("Server error:", err);
         context.res = { status: 500, body: { error: "Server error" } };
     }

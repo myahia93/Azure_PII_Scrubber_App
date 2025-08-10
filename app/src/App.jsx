@@ -7,7 +7,7 @@ function App() {
   const [language, setLanguage] = useState('auto');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [result, setResult] = useState(null); // expected: { anonymized: string, spans?: [{start:number,end:number}] }
+  const [result, setResult] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -46,30 +46,24 @@ function App() {
     URL.revokeObjectURL(url);
   };
 
-  const renderHighlighted = (anonymized, spans) => {
-    if (!anonymized) return null;
-    if (!spans || spans.length === 0) return anonymized;
+  const renderHighlighted = (text, spans) => {
+    if (!text) return null;
+    if (!spans || spans.length === 0) return text;
 
-    const sorted = [...spans].sort((a, b) => a.start - b.start);
     const parts = [];
     let cursor = 0;
 
-    sorted.forEach((s, i) => {
+    spans.forEach((s, i) => {
       if (s.start > cursor) {
-        parts.push(anonymized.slice(cursor, s.start));
+        parts.push(text.slice(cursor, s.start));
       }
-      parts.push(
-        <mark key={i}>
-          {anonymized.slice(s.start, Math.min(s.end, anonymized.length))}
-        </mark>
-      );
-      cursor = Math.min(s.end, anonymized.length);
+      parts.push(<mark key={i}>{text.slice(s.start, s.end)}</mark>);
+      cursor = s.end;
     });
 
-    if (cursor < anonymized.length) {
-      parts.push(anonymized.slice(cursor));
+    if (cursor < text.length) {
+      parts.push(text.slice(cursor));
     }
-
     return parts;
   };
 
@@ -98,9 +92,9 @@ function App() {
               value={policy}
               onChange={(e) => setPolicy(e.target.value)}
             >
-              <option value="redact">redact</option>
-              <option value="pseudo">pseudo</option>
-              <option value="hash">hash</option>
+              <option value="redact">Redact (*** mask)</option>
+              <option value="pseudo">Pseudo ([Category])</option>
+              <option value="hash">Hash (sha256, 10 chars)</option>
             </select>
           </div>
 
@@ -112,9 +106,9 @@ function App() {
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
             >
-              <option value="auto">auto</option>
-              <option value="en">en</option>
-              <option value="fr">fr</option>
+              <option value="auto">Auto detect</option>
+              <option value="en">English</option>
+              <option value="fr">French</option>
             </select>
           </div>
 
@@ -149,5 +143,3 @@ function App() {
 }
 
 export default App;
-
-
