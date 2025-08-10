@@ -1,19 +1,12 @@
 :root {
   --bg: #0f172a;
-  /* page bg (indigo slate) */
-  --card: #ffffff;
-  /* card bg */
+  --card: #fff;
   --muted: #64748b;
-  /* text muted */
   --ink: #0f172a;
-  /* text dark */
   --brand1: #5b9df9;
-  /* gradient start */
   --brand2: #7c3aed;
-  /* gradient end */
   --primary: #2563eb;
-  /* button */
-  --primary-ink: #ffffff;
+  --primary-ink: #fff;
   --ring: #93c5fd;
   --border: #e2e8f0;
   --soft: #f8fafc;
@@ -22,7 +15,6 @@
   --shadow: 0 6px 18px rgba(2, 6, 23, .08);
 }
 
-/* Page */
 * {
   box-sizing: border-box
 }
@@ -45,43 +37,44 @@ body {
   flex-direction: column
 }
 
-/* Header */
+/* FULL-BLEED HEADER */
 .header {
-  background: linear-gradient(135deg, var(--brand1), var(--brand2));
+  position: relative;
+  isolation: isolate;
+  padding: 32px 0;
   color: #fff;
-  padding: 28px 0;
 }
 
-.brand {
-  margin: 0;
-  font-size: 2rem;
-  font-weight: 800;
-  letter-spacing: .2px
+.header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* full width */
+  z-index: -1;
+  background: linear-gradient(135deg, var(--brand1), var(--brand2));
 }
 
-.tagline {
-  margin: 4px 0 0;
-  opacity: .9
-}
-
-/* Layout */
+/* CENTER THE CONTENT */
 .container {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 0 20px
+  width: min(100%, 1100px);
+  /* never exceed 1100px */
+  margin-inline: auto;
+  /* centers horizontally */
+  padding-inline: 20px;
 }
 
 .main {
   padding: 28px 0 40px
 }
 
-/* Card */
+/* CARD */
 .card {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: 20px;
-  margin-bottom: 22px;
+  margin: 0 auto 22px;
+  /* auto centers the card in the container */
   box-shadow: var(--shadow);
 }
 
@@ -96,7 +89,7 @@ body {
   margin: 0 0 16px
 }
 
-/* Form + fields */
+/* GRID + FIELDS */
 .grid {
   display: grid
 }
@@ -133,7 +126,7 @@ body {
 
 .input:focus {
   border-color: var(--ring);
-  box-shadow: 0 0 0 3px rgba(147, 197, 253, .35);
+  box-shadow: 0 0 0 3px rgba(147, 197, 253, .35)
 }
 
 .textarea {
@@ -149,7 +142,7 @@ body {
   background-repeat: no-repeat
 }
 
-/* Buttons */
+/* BUTTONS */
 .actions {
   display: flex;
   gap: 12px;
@@ -163,7 +156,7 @@ body {
   font-weight: 700;
   cursor: pointer;
   border: 1px solid transparent;
-  transition: transform .05s ease, background .2s ease, color .2s ease, border-color .2s ease;
+  transition: transform .05s ease, background .2s ease, color .2s ease, border-color .2s ease
 }
 
 .btn:active {
@@ -195,9 +188,7 @@ body {
   color: #fff
 }
 
-/* Results */
-.panel {}
-
+/* RESULTS */
 .panel-title {
   margin: 0 0 8px;
   font-weight: 700
@@ -210,7 +201,7 @@ body {
   padding: 12px;
   min-height: 160px;
   white-space: pre-wrap;
-  word-break: break-word;
+  word-break: break-word
 }
 
 .codeblock.green {
@@ -231,22 +222,22 @@ body {
   padding: 4px 8px;
   border-radius: 999px;
   font-size: .85rem;
-  font-weight: 700;
+  font-weight: 700
 }
 
-/* Highlight for PII replacements */
+/* HIGHLIGHT */
 mark {
   background: var(--yellow);
   padding: 0 3px;
   border-radius: 4px;
-  font-weight: 700;
+  font-weight: 700
 }
 
-/* Alerts */
+/* ALERT */
 .alert {
   padding: 10px 12px;
   border-radius: 10px;
-  border: 1px solid;
+  border: 1px solid
 }
 
 .error {
@@ -255,19 +246,7 @@ mark {
   color: #7f1d1d
 }
 
-/* Footer */
-.footer {
-  color: #cbd5e1;
-  padding: 24px 0 40px;
-  text-align: center
-}
-
-.footnote {
-  opacity: .9;
-  font-size: .95rem
-}
-
-/* Responsive */
+/* RESPONSIVE */
 @media (max-width: 800px) {
   .two {
     grid-template-columns: 1fr
