@@ -1,11 +1,15 @@
+/* Styles for the PII Scrubber app UI */
 body {
   background: #f3f3f3;
+  margin: 0;
+  font-family: sans-serif;
 }
 
 .App {
   max-width: 900px;
   margin: 40px auto;
-  font-family: sans-serif;
+  font-family: inherit;
+  padding: 0 16px;
 }
 
 h2 {
@@ -26,14 +30,18 @@ textarea {
   border-radius: 4px;
   resize: vertical;
   background: #fff;
+  box-sizing: border-box;
 }
 
 select {
+  width: 140px;
   padding: 4px 8px;
   font-size: 1rem;
   border-radius: 4px;
   border: 1px solid #bbb;
   background: #fff;
+  margin-right: 8px;
+  box-sizing: border-box;
 }
 
 button {
@@ -45,6 +53,11 @@ button {
   color: #fff;
   cursor: pointer;
   transition: background 0.2s;
+  font-weight: 500;
+}
+
+button:hover:not(:disabled) {
+  background: #24994c;
 }
 
 button:disabled {
@@ -68,6 +81,7 @@ form label {
 
 .panel {
   flex: 1;
+  min-width: 0;
 }
 
 .panel h4 {
@@ -81,6 +95,7 @@ form label {
   background: #fafafa;
   white-space: pre-wrap;
   border-radius: 4px;
+  word-break: break-word;
 }
 
 .anonymized-box {
@@ -90,10 +105,21 @@ form label {
   background: #f6fff6;
   white-space: pre-wrap;
   border-radius: 4px;
+  word-break: break-word;
 }
 
 mark {
   background: #ffe066;
   border-radius: 2px;
-  padding: 0;
+  padding: 0 2px;
+}
+
+@media (max-width: 700px) {
+  .panels {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .App {
+    padding: 0 8px;
+  }
 }
